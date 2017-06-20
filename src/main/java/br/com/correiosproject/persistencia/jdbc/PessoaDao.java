@@ -10,7 +10,8 @@ import java.util.List;
 import br.com.correiosproject.persistencia.entidade.Pessoa;
 
 public class PessoaDao {
-private Connection con = ConexaoFactory.getConnection();
+private static Connection con = ConexaoFactory.getConnection();
+final private static String searchId = "select p.id, p.cpf, p.nome,p.email, p.celular, l.nome, p.numero, p.complemento  from pessoas p inner join logradouros l on p.id_logradouro=l.id limit 100";
 	
 	public void cadastrar(Pessoa pessoa) {
 		String sql = "insert into pessoas (cpf,nome, email, celular, id_logradouro, numero, complemento) values (?,?,?,?,?,?,?)";
@@ -32,8 +33,9 @@ private Connection con = ConexaoFactory.getConnection();
 		
 		
 	}
-	public void alterar(Pessoa pessoa) {
-		String sql = "update pessoas set cpf=?, nome=?, email=?, celular=?, id_logradouro=?, numero=?, complemento=? where id=?";
+	public String alterar(Pessoa pessoa) {
+		String retorno = "falha";  
+		String sql = "update pessoas set cpf=?, nome=?, email=?, celular=?, id_logradouro=?, numero=?, complemento=? where id= '"+ pessoa.getId() +"'";
 		try (PreparedStatement preparador = con.prepareStatement(sql)){
 			preparador.setString(1, pessoa.getCpf());
 			preparador.setString(2, pessoa.getNome());
@@ -44,11 +46,13 @@ private Connection con = ConexaoFactory.getConnection();
 			preparador.setString(7, pessoa.getComplemento());
 			preparador.setInt(8, pessoa.getId());
 			
-			preparador.execute();
+			preparador.executeUpdate(); 
+			retorno = "sucesso";
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return retorno;
 		
 	}
 	public void excluir(Pessoa pessoa) {
@@ -99,8 +103,9 @@ private Connection con = ConexaoFactory.getConnection();
 		}
 	}
 	
-	public Pessoa buscaPorId(Integer id){
-		String sql = "select p.id, p.cpf, p.nome,p.email, p.celular, l.nome, p.numero, p.complemento  from pessoas p inner join logradouros l on p.id_logradouro=l.id limit 100";
+	public Pessoa selecionar(int id){
+		Pessoa pessoa = new Pessoa();
+		String sql = "select p.id, p.cpf, p.nome,p.email, p.celular, l.nome , p.numero, p.complemento  from pessoas p inner join logradouros l on p.id_logradouro=l.id where p.id'"+ id +"'";
 		
 		try (PreparedStatement preparador = con.prepareStatement(sql)){
 			preparador.setInt(1, id);
@@ -108,7 +113,7 @@ private Connection con = ConexaoFactory.getConnection();
 			ResultSet resultado = preparador.executeQuery();
 			//Posicionando o cursor no primeiro registro
 			if(resultado.next()){
-				Pessoa pessoa = new Pessoa();
+				
 				pessoa.setId(resultado.getInt("p.id"));
 				pessoa.setCpf(resultado.getString("p.cpf"));
 				pessoa.setNome(resultado.getString("p.nome"));
@@ -117,20 +122,18 @@ private Connection con = ConexaoFactory.getConnection();
 				pessoa.getLogradouro().setNome(resultado.getString("l.nome"));
 				pessoa.setNumero(resultado.getString("p.numero"));
 				pessoa.setComplemento(resultado.getString("p.complemento"));
-				return pessoa;
+				
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
-		
-
+		return pessoa;
 	}
-      
- 
-    }
+	
+	 
+}
 
 
 

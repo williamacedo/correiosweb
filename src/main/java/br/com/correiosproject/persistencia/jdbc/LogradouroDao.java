@@ -88,13 +88,14 @@ public class LogradouroDao {
 		}
 	}
 
-	public List<Logradouro> buscaPorCep(String cep) {
+	public List<Logradouro> buscaPorCep(String cep, String rua) {
 
-		String sql = "select l.cep, l.nome,t.nome, b.nome from logradouros l inner join tipos_logradouros t inner join bairros b on l.id_tipo_logradouro=t.id AND l.id_bairro=b.id where cep like ?";
+		String sql = "select l.cep, l.nome,t.nome, b.nome, c.nome from logradouros l inner join tipos_logradouros t on l.id_tipo_logradouro=t.id inner join bairros b on l.id_bairro=b.id inner join cidades c on b.id_cidade=c.id where cep like ? or l.nome like ?";
 		
 
 		try (PreparedStatement preparador = con.prepareStatement(sql)) {
 			preparador.setString(1, "%" + cep + "%");
+			preparador.setString(2, "%" + rua + "%");
 
 			ResultSet resultado = preparador.executeQuery();
 			List<Logradouro> logradouros = new ArrayList<Logradouro>();
@@ -106,7 +107,7 @@ public class LogradouroDao {
 				logradouro.getTipologradouro().setNome(
 						resultado.getString("t.nome"));
 				logradouro.getBairros().setNome(resultado.getString("b.nome"));
-
+				logradouro.getBairros().getCidade().setNome(resultado.getString("c.nome"));
 				logradouros.add(logradouro);
 			}
 			return logradouros;
@@ -118,4 +119,5 @@ public class LogradouroDao {
 
 
 	}
+	
 }

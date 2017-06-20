@@ -41,6 +41,7 @@
 					<h2>Atualizar Pessoa:</h2>
 		<%
 		Pessoa u = (Pessoa)request.getAttribute("usu");
+		System.out.println(u);
 		%>
 				<form method="post" action="pessoacontroller.do" method="post">
 					<div class="row">

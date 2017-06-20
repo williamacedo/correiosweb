@@ -9,7 +9,7 @@ public class Pessoa {
 	private Logradouro logradouro = new Logradouro();
 	private String numero;
 	private String complemento;
-
+	
 	public Integer getId() {
 		return id;
 	}

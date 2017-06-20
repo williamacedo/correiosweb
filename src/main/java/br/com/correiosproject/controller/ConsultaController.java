@@ -26,10 +26,11 @@ public class ConsultaController extends HttpServlet {
 		List<Logradouro> logradouros = new ArrayList<>();
 		logradouros = dao.getLista();
 		String parametro = req.getParameter("searchString");
+		String rua = req.getParameter("searchString");
 		
 
 		try {
-			logradouros = dao.buscaPorCep(parametro);
+			logradouros = dao.buscaPorCep(parametro, rua);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,19 +46,23 @@ public class ConsultaController extends HttpServlet {
 		out.println("<div class='container' style='padding: 57px'>");
 		out.println("<table class='table'>"
 				+ "<thead style='background-color: #ddd'><tr><th scope='col'>Cep</th><th scope='col'>Nome</th>"
-				+ "<th scope='col'>Logradouro</th><th scope='col'>Bairro</th><th scope='col'></th></tr></thead>");
+				+ "<th scope='col'>Logradouro</th><th scope='col'>Bairro</th><th scope='col'>Cidade</th></tr></thead>");
 
 		for (Logradouro logradouro : logradouros) {
 			out.println("<tbody><tr> " + "<td>" + logradouro.getCep() + " "
 					+ "</td>" + "<td>" + logradouro.getNome() + " " + "</td>"
 					+ "<td>" + logradouro.getTipologradouro().getNome() + " "
 					+ "</td>" + "<td>" + logradouro.getBairros().getNome()
-					+ " " + "</td>" + "</tr>" + "</table>");
+					+ " " + "</td>" +
+					"<td>" + logradouro.getBairros().getCidade().getNome()
+					+ " " + "</td>"+ "</tr>");
+				}
+			out.println("</table>");
 			out.println("</div>");
 			out.println("</body>");
 			out.println("</html>");
 
-		}
+
 
 	}
 }

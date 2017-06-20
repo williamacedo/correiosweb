@@ -73,7 +73,7 @@
 			<td><%=pessoa.getComplemento()%></td>
 			
 			<td>
-				<a class="btn btn-info" style="float: left;margin-right: 11px" href="pessoacontroller.do?acao=alt&id=<%=pessoa.getId()%>"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+				<a class="btn btn-info" style="float: left;margin-right: 11px" href="editpes.jsp?id=<%=pessoa.getId()%>"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
 				<a class="btn btn-danger" onclick="return confirm('Tem certeza que deseja remover esta pessoa?');" style="float: left" href="pessoacontroller.do?acao=exc&id=<%=pessoa.getId()%>"><i class="fa fa-trash" aria-hidden="true"></i> Excluir</a>
 			</td>
 		</tr>

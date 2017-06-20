@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import br.com.correiosproject.persistencia.entidade.Pessoa;
 import br.com.correiosproject.persistencia.jdbc.PessoaDao;
 
-@WebServlet("/atualizarcontroller.do")
 public class AtualizarController extends HttpServlet {
 
 	/**
@@ -21,22 +20,27 @@ public class AtualizarController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	
+	}
+
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		PrintWriter out = resp.getWriter();
-		String id = req.getParameter("id");
+		// TODO Auto-generated method stub
+		int id = Integer.parseInt(req.getParameter("id"));
 		String cpf = req.getParameter("cpf");
 		String nome = req.getParameter("nome");
 		String email = req.getParameter("email");
 		String celular = req.getParameter("celular");
-		String logradouro = req.getParameter("logradouro");
+		String logradouro = req.getParameter("id_logradouro");
 		String numero = req.getParameter("numero");
 		String complemento = req.getParameter("complemento");
-
+		
 		Pessoa pessoa = new Pessoa();
-
-		pessoa.setId(Integer.parseInt(id));
+		pessoa.setId(id);
 		pessoa.setCpf(cpf);
 		pessoa.setNome(nome);
 		pessoa.setEmail(email);
@@ -44,16 +48,19 @@ public class AtualizarController extends HttpServlet {
 		pessoa.getLogradouro().setId(Long.parseLong(logradouro));
 		pessoa.setNumero(numero);
 		pessoa.setComplemento(complemento);
-
-		PessoaDao dao = new PessoaDao();
-		dao.alterar(pessoa);
-
-		out.println("<html>");
-		out.println("<body>");
-		out.println("<h1>Alterado com Sucesso</h1>");
-		out.println("<a href='listapes.jsp'>Voltar</a>");
-		out.println("</body>");
-		out.println("</html>");
+		
+		PessoaDao pessoaDao = new PessoaDao();
+		String retorno = pessoaDao.alterar(pessoa);
+		if(retorno.equals("sucesso")){
+			resp.sendRedirect("listapes.jsp");
+		}else{
+			PrintWriter out = resp.getWriter();
+			out.print("<html>");
+			out.print("<Não foi possivel alterar a pessoa");
+			out.print("<br/>");
+			out.print("<a href='listapes.jsp'>Voltar</a>");
+			out.print("</html>");
+		}
 	}
 
 }

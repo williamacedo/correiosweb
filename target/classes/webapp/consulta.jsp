@@ -54,7 +54,7 @@
 			</div>
 		</form>
 			<table class="table">
-							<thead>
+							<thead style="background-color: #ddd">
 
 								<tr>
 									<th>CEP</th>
